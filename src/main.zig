@@ -139,11 +139,3 @@ fn miningLoop(ctx: *MiningContext) void {
 
     std.debug.print("Mining thread stopped\n", .{});
 }
-
-test "simple test" {
-    const testing_allocator = std.testing.allocator;
-    var list = std.ArrayList(i32).init(testing_allocator);
-    defer list.deinit();
-    try list.append(42);
-    try std.testing.expectEqual(@as(i32, 42), list.pop());
-}
