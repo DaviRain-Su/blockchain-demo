@@ -8,7 +8,7 @@ pub const MessageType = enum(u8) {
     response_blocks,
 };
 
-pub const Message = union(MessageType) {
+pub const Message = union(enum) {
     block: Block,
     request_blocks: void,
     response_blocks: []Block,
