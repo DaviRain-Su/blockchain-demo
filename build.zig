@@ -100,21 +100,6 @@ pub fn build(b: *std.Build) void {
     // by passing `--prefix` or `-p`.
     b.installArtifact(exe);
 
-    // libxev version executable
-    const exe_xev = b.addExecutable(.{
-        .name = "blockchain_xev",
-        .root_module = b.createModule(.{
-            .root_source_file = b.path("src/main_xev.zig"),
-            .target = target,
-            .optimize = optimize,
-            .imports = &.{
-                .{ .name = "blockchain_demo", .module = mod },
-                .{ .name = "xev", .module = xev_mod },
-            },
-        }),
-    });
-    b.installArtifact(exe_xev);
-
     // This creates a top level step. Top level steps have a name and can be
     // invoked by name when running `zig build` (e.g. `zig build run`).
     // This will evaluate the `run` step rather than the default step.
@@ -139,15 +124,6 @@ pub fn build(b: *std.Build) void {
     // command itself, like this: `zig build run -- arg1 arg2 etc`
     if (b.args) |args| {
         run_cmd.addArgs(args);
-    }
-
-    // Run step for xev version
-    const run_xev_step = b.step("run-xev", "Run the libxev version");
-    const run_xev_cmd = b.addRunArtifact(exe_xev);
-    run_xev_step.dependOn(&run_xev_cmd.step);
-    run_xev_cmd.step.dependOn(b.getInstallStep());
-    if (b.args) |args| {
-        run_xev_cmd.addArgs(args);
     }
 
     // Creates an executable that will run `test` blocks from the provided module.
