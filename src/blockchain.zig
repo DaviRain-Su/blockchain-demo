@@ -72,12 +72,14 @@ pub const Blockchain = struct {
         self.blocks.deinit(self.allocator);
     }
 
+    /// 创建固定的创世块（所有节点使用相同的创世块）
     pub fn createGenesisBlock(self: *Blockchain, data: []const u8) !void {
-        const timestamp = std.time.timestamp();
+        // 使用固定时间戳确保所有节点创世块相同
+        const fixed_timestamp: i64 = 1700000000; // 固定时间戳
         var prev_hash: [32]u8 = undefined;
         @memset(&prev_hash, 0);
 
-        var block = Block.init(self.allocator, 0, timestamp, prev_hash, data);
+        var block = Block.init(self.allocator, 0, fixed_timestamp, prev_hash, data);
         block.mine(24); // difficulty 24
         try self.blocks.append(self.allocator, block);
     }
